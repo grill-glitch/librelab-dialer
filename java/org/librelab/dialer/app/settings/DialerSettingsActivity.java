@@ -152,6 +152,12 @@ public class DialerSettingsActivity extends BaseActivity implements
       lookupSettings.setIconSpaceReserved(false);
       getPreferenceScreen().addPreference(lookupSettings);
 
+      final Preference antiSpamSettings = new Preference(getContext());
+      antiSpamSettings.setTitle(R.string.antispam_settings_label);
+      antiSpamSettings.setFragment(AntiSpamSettingsFragment.class.getName());
+      antiSpamSettings.setIconSpaceReserved(false);
+      getPreferenceScreen().addPreference(antiSpamSettings);
+
       TelephonyManager telephonyManager = getContext().getSystemService(TelephonyManager.class);
       TelecomManager telecomManager = (TelecomManager) getContext().getSystemService(
               Context.TELECOM_SERVICE);

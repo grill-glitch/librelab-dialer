@@ -387,6 +387,20 @@ public class ContactGridManager {
       hdIconImageView.setVisibility(View.GONE);
     }
     spamIconImageView.setVisibility(info.isSpamIconVisible ? View.VISIBLE : View.GONE);
+    // LibreLab anti-spam: swap the generic report icon for the category icon
+    // (e.g. 房产中介=house, 广告推销=speaker) when a marking is present.
+    if (info.isSpamIconVisible && primaryInfo.number() != null) {
+      org.json.JSONObject marked = org.librelab.dialer.antispam.AntiSpamCache
+          .getInstance(context).get(primaryInfo.number());
+      if (marked != null) {
+        org.json.JSONObject atd = org.librelab.dialer.antispam.AntiSpamClient.atdOf(marked);
+        int catId = org.librelab.dialer.antispam.AntiSpamClient.categoryId(atd);
+        if (catId > 0) {
+          spamIconImageView.setImageResource(
+              org.librelab.dialer.antispam.AntiSpamIcons.iconResForCategory(catId));
+        }
+      }
+    }
 
     if (info.isForwardIconVisible) {
       forwardIconImageView.setVisibility(View.VISIBLE);

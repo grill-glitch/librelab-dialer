@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 房产中介 (real estate) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M12,7V3H8v4H4v2h1v6h2v-6h2v6h2v-6h2v6h2V9h1V7h-4zM6,19h12v-1.5H6V19z" />
+</vector>

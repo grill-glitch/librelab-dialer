@@ -135,6 +135,7 @@ android_app {
     ],
     resource_dirs: [
         "assets/quantum/res",
+        "java/org/librelab/dialer/antispam/res",
         "java/org/librelab/contacts/common/res",
         "java/org/librelab/dialer/app/res",
         "java/org/librelab/dialer/assisteddialing/res",

@@ -118,4 +118,22 @@
   <string name="call_log_action_remove_spam">非骚扰电话号码</string>
   <string name="call_log_action_unblock_number">取消屏蔽号码</string>
   <string name="spam_number_call_log_label">骚扰电话号码</string>
+
+  <!-- LibreLab 骚扰拦截设置 -->
+  <string name="antispam_settings_label">骚扰拦截</string>
+  <string name="antispam_category_title">号码标记</string>
+  <string name="antispam_enabled_title">号码标记</string>
+  <string name="antispam_enabled_summary">来电时查询小米黄页数据库标记,并按所选分类自动拦截</string>
+  <string name="antispam_icon_title">显示来电类型图标</string>
+  <string name="antispam_icon_summary">在来电界面显示标记号码的类型图标</string>
+  <string name="antispam_block_category_title">拦截分类</string>
+  <string name="antispam_block_high_risk">高风险(诈骗)</string>
+  <string name="antispam_block_high_risk_summary">疑似诈骗/诈骗电话</string>
+  <string name="antispam_block_realestate">房产中介</string>
+  <string name="antispam_block_ads">广告推销</string>
+  <string name="antispam_block_delivery">快递外卖</string>
+  <string name="antispam_block_loan">贷款推销</string>
+  <string name="antispam_block_education">教育培训</string>
+  <string name="antispam_block_repair">装修维修</string>
+  <string name="antispam_block_insurance">保险理财</string>
 </resources>

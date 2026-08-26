@@ -579,6 +579,18 @@
             </intent-filter>
         </service>
 
+        <!-- LibreLab Anti-Spam: number marking + call blocking (MIUI yellow-page API).
+             Requires the user to enable "Call screening" for this app, or grant
+             android.app.role.CALL_SCREENING via RoleManager. -->
+        <service
+            android:name="org.librelab.dialer.antispam.AntiSpamCallScreeningService"
+            android:exported="true"
+            android:permission="android.permission.BIND_SCREENING_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name="org.librelab.incallui.AudioRouteSelectorActivity"
             android:excludeFromRecents="true"

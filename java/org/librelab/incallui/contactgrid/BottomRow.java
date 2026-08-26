@@ -88,6 +88,28 @@ public class BottomRow {
       label = context.getString(R.string.contact_grid_incoming_suspected_spam);
       isSpamIconVisible = true;
       isHdIconVisible = false;
+    } else if (isIncoming(state)) {
+      // LibreLab anti-spam: show number marking (e.g. "广告推销") from the
+      // in-process cache populated by AntiSpamCallScreeningService.
+      org.json.JSONObject marked = null;
+      if (primaryInfo.number() != null) {
+        marked = org.librelab.dialer.antispam.AntiSpamCache.getInstance(context)
+            .get(primaryInfo.number());
+      }
+      if (marked != null) {
+        org.json.JSONObject atd = org.librelab.dialer.antispam.AntiSpamClient.atdOf(marked);
+        String markName = org.librelab.dialer.antispam.AntiSpamClient.categoryName(atd);
+        if (markName != null && markName.length() > 0) {
+          label = markName;
+          isSpamIconVisible = true;
+          isHdIconVisible = false;
+        } else {
+          label = getLabelForPhoneNumber(primaryInfo);
+        }
+      } else {
+        label = getLabelForPhoneNumber(primaryInfo);
+      }
+      shouldPopulateAccessibilityEvent = primaryInfo.nameIsNumber();
     } else if (state.state() == DialerCallState.DISCONNECTING) {
       // While in the DISCONNECTING state we display a "Hanging up" message in order to make the UI
       // feel more responsive.  (In GSM it's normal to see a delay of a couple of seconds while

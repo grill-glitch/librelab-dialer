@@ -516,4 +516,22 @@
 
   <!-- Label under the name of a spam number in the call log. [CHAR LIMIT=15] -->
   <string name="spam_number_call_log_label">Spam</string>
+
+  <!-- LibreLab anti-spam settings -->
+  <string name="antispam_settings_label">Anti-spam</string>
+  <string name="antispam_category_title">Number marking</string>
+  <string name="antispam_enabled_title">Number marking</string>
+  <string name="antispam_enabled_summary">Mark incoming calls from the MIUI yellow-page database and block selected categories</string>
+  <string name="antispam_icon_title">Show category icons</string>
+  <string name="antispam_icon_summary">Display an icon for the marked call type on the incoming call screen</string>
+  <string name="antispam_block_category_title">Block categories</string>
+  <string name="antispam_block_high_risk">High risk (fraud)</string>
+  <string name="antispam_block_high_risk_summary">Suspected fraud / scam calls</string>
+  <string name="antispam_block_realestate">Real estate</string>
+  <string name="antispam_block_ads">Ads / telemarketing</string>
+  <string name="antispam_block_delivery">Delivery</string>
+  <string name="antispam_block_loan">Loan offers</string>
+  <string name="antispam_block_education">Education / training</string>
+  <string name="antispam_block_repair">Home repair</string>
+  <string name="antispam_block_insurance">Insurance / finance</string>
 </resources>
