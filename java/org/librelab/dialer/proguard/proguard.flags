@@ -1,0 +1,13 @@
+# Keep the annotation, classes, methods, and fields marked as UsedByReflection
+# TODO(b/373579455): Evaluate if <init> needs to be kept.
+-keep class org.librelab.dialer.proguard.UsedByReflection {
+    void <init>();
+}
+# TODO(b/373579455): Evaluate if <init> needs to be kept.
+-keep @org.librelab.dialer.proguard.UsedByReflection class * {
+    void <init>();
+}
+-keepclassmembers class * {
+    @org.librelab.dialer.proguard.UsedByReflection *;
+}
+-keep class com.google.android.material.floatingactionbutton.FloatingActionButton$* { *; }

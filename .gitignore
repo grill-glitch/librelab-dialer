@@ -1,0 +1,24 @@
+# Keystore + private key (sensitive — never commit)
+*.keystore
+certs/*.pk8
+
+# Public certificate (safe to commit)
+!certs/*.x509.pem
+
+keystore.properties
+
+# Build artifacts
+out/
+build/
+*.apk
+*.odex
+*.vdex
+
+# IDE
+.idea/
+*.iml
+.gradle/
+local.properties
+
+# OS
+.DS_Store
