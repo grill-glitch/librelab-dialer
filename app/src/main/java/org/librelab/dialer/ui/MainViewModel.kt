@@ -123,22 +123,17 @@ class MainViewModel @Inject constructor(
     /**
      * Open the system Default Apps settings where the user can select this app
      * as the default phone/dialer app. Works on all Android versions and ROMs.
+     *
+     * crDroid: The RoleManager.createRequestRoleIntent path crashes with
+     * "Package name cannot be null or empty" because permissioncontroller
+     * fails to read the requesting package — use ACTION_MANAGE_DEFAULT_APPS_SETTINGS instead.
      */
     fun createRequestDefaultDialerIntent(): android.content.Intent {
-        // First try the role-request intent (Android 10+), but skip the
-        // resolveActivity check — it fails on crDroid/MIUI even when the
-        // intent is structurally valid.
-        val roleManager = context.getSystemService(Context.ROLE_SERVICE) as? RoleManager
-        val roleIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            roleManager?.createRequestRoleIntent(RoleManager.ROLE_DIALER)
-        } else {
-            null
+        // Primary: system Default Apps settings page — reliable on all ROMs
+        val settingsIntent = android.content.Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS).apply {
+            addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        if (roleIntent != null) {
-            return roleIntent
-        }
-        // Fallback: open the system Default Apps settings page
-        return android.content.Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+        return settingsIntent
     }
 
     /** Dismiss the default-dialer setup banner (user permanently closed it). */
