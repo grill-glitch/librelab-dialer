@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Whether call recording is available on this device.
+         Set to true to enable the call recording feature in settings. -->
+    <bool name="call_recording_enabled">true</bool>
+</resources>

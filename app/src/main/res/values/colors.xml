@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand colors (Material You dynamic in-app) -->
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="primary_light">#42A5F5</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <color name="secondary">#26A69A</color>
+    <color name="on_secondary">#FFFFFF</color>
+
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#121212</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_dark">#1E1E1E</color>
+
+    <color name="on_background_light">#1C1B1F</color>
+    <color name="on_background_dark">#E6E1E5</color>
+
+    <!-- Call type colors -->
+    <color name="call_incoming">#4CAF50</color>
+    <color name="call_outgoing">#2196F3</color>
+    <color name="call_missed">#F44336</color>
+    <color name="call_voicemail">#9E9E9E</color>
+    <color name="call_blocked">#F44336</color>
+
+    <!-- Dialpad -->
+    <color name="dialpad_key_text">#212121</color>
+    <color name="dialpad_key_text_dark">#E0E0E0</color>
+    <color name="dialpad_background">#FFFFFF</color>
+    <color name="dialpad_background_dark">#1E1E1E</color>
+
+    <!-- Status bar -->
+    <color name="status_bar_light">#1565C0</color>
+    <color name="status_bar_dark">#000000</color>
+</resources>

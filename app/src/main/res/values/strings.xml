@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LibreDialer</string>
+
+    <!-- Main tabs -->
+    <string name="tab_keypad">Keypad</string>
+    <string name="tab_call_log">Recents</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="tab_contacts">Contacts</string>
+
+    <!-- Dialpad -->
+    <string name="dialpad_汉子">Keypad</string>
+    <string name="dial_button">Call</string>
+    <string name="dialpad_0">0</string>
+    <string name="dialpad_1">1</string>
+    <string name="dialpad_2">2</string>
+    <string name="dialpad_3">3</string>
+    <string name="dialpad_4">4</string>
+    <string name="dialpad_5">5</string>
+    <string name="dialpad_6">6</string>
+    <string name="dialpad_7">7</string>
+    <string name="dialpad_8">8</string>
+    <string name="dialpad_9">9</string>
+    <string name="dialpad_star">*</string>
+    <string name="dialpad_pound">#</string>
+    <string name="dialpad_backspace">Backspace</string>
+
+    <!-- Call log -->
+    <string name="call_log_title">Recents</string>
+    <string name="call_log_empty">No recent calls</string>
+    <string name="call_log_clear">Clear all</string>
+    <string name="call_log_block">Block number</string>
+    <string name="call_log_report_spam">Report as spam</string>
+    <string name="call_log_uncall">Unmark as spam</string>
+    <string name="call_type_incoming">Incoming</string>
+    <string name="call_type_outgoing">Outgoing</string>
+    <string name="call_type_missed">Missed</string>
+    <string name="call_type_rejected">Rejected</string>
+    <string name="call_type_voicemail">Voicemail</string>
+    <string name="call_type_blocked">Blocked</string>
+
+    <!-- In-call -->
+    <string name="incall_dialpad">Keypad</string>
+    <string name="incall_mute">Mute</string>
+    <string name="incall_speaker">Speaker</string>
+    <string name="incall_end_call">End call</string>
+    <string name="incall_hold">Hold</string>
+    <string name="incall_swap">Swap</string>
+    <string name="incall_add_call">Add call</string>
+    <string name="incall_merge">Merge</string>
+    <string name="incall_bluetooth">Bluetooth</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_display">Display options</string>
+    <string name="settings_sound">Sound</string>
+    <string name="settings_call_forwarding">Call forwarding</string>
+    <string name="settings_assisted_dialing">Assisted dialing</string>
+    <string name="settings_spam">Spam protection</string>
+    <string name="settings_about">About</string>
+
+    <!-- Permissions -->
+    <string name="permission_phone_title">Phone permission required</string>
+    <string name="permission_phone_message">LibreDialer needs phone permission to make and manage calls.</string>
+    <string name="permission_contacts_title">Contacts permission required</string>
+    <string name="permission_contacts_message">LibreDialer needs contacts permission to show caller information.</string>
+    <string name="permission_grant">Grant</string>
+
+    <!-- General -->
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="search">Search</string>
+    <string name="delete">Delete</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
+    <string name="copy">Copy</string>
+    <string name="edit">Edit</string>
+    <string name="add_contact">Add contact</string>
+    <string name="unknown">Unknown number</string>
+    <string name="private_number">Private number</string>
+
+    <!-- Post-call -->
+    <string name="post_call_message">Call ended — send a message?</string>
+    <string name="post_call_send_message">Send</string>
+    <string name="post_call_message_sent">Message sent</string>
+    <string name="view">View</string>
+
+    <!-- Call recording -->
+    <string name="recording_active">Recording in progress</string>
+    <string name="recording_warning_title">Call Recording Warning</string>
+    <string name="recording_warning_text">Call recording may be subject to legal restrictions in your jurisdiction. By enabling this feature, you take full responsibility for compliance with applicable laws.</string>
+    <string name="onscreenCallRecordText">Record</string>
+    <string name="call_recording_format_key">call_recording_format</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_call_number">Call %s</string>
+    <string name="cd_backspace">Delete last digit</string>
+    <string name="cd_dialpad">Show dialpad</string>
+    <string name="cd_hide_dialpad">Hide dialpad</string>
+    <string name="cd_contact_photo">Contact photo</string>
+    <string name="cd_call_type_icon">Call type</string>
+
+    <!-- Default dialer / setup -->
+    <string name="setup_default_title">设为默认拨号应用</string>
+    <string name="setup_default_body">将 LibreDialer 设为默认拨号应用，来电界面和通话功能将由 LibreDialer 提供。</string>
+    <string name="action_go_settings">前往设置</string>
+    <string name="default_app_unavailable">无法打开系统设置，请手动前往设置 → 应用 → 默认应用 → 拨号应用。</string>
+    <string name="settings_default_dialer">默认拨号器</string>
+    <string name="settings_default_dialer_summary">将 LibreDialer 设为默认拨号应用</string>
+</resources>

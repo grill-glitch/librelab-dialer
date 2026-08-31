@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dialpad_bg">#FF4A5158</color>
+    <color name="dialpad_key_face">#FF6D7985</color>
+    <color name="dialpad_digit">#FFE8E8E8</color>
+    <color name="dialpad_letter">#FFBDBDBD</color>
+    <color name="dialpad_call_enabled">#FF3EE0A0</color>
+    <color name="dialpad_call_disabled">#FF2A3C35</color>
+    <color name="dialpad_backspace">#FFBDBDBD</color>
+    <color name="dialpad_close">#FFBDBDBD</color>
+</resources>
