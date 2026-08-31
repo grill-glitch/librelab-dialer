@@ -136,6 +136,19 @@ class MainViewModel @Inject constructor(
         return settingsIntent
     }
 
+    /**
+     * Create a ROLE_DIALER request intent using the platform RoleManager.
+     * Returns null if the role is unavailable (pre-Q or role not defined).
+     * Used with startActivityForResult for proper dialog result handling.
+     */
+    fun createRoleRequestIntent(): android.content.Intent? {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val roleManager = context.getSystemService(Context.ROLE_SERVICE) as? RoleManager
+            return roleManager?.createRequestRoleIntent(RoleManager.ROLE_DIALER)
+        }
+        return null
+    }
+
     /** Dismiss the default-dialer setup banner (user permanently closed it). */
     fun dismissDefaultDialerBanner() {
         _state.value = _state.value.copy(showDefaultDialerBanner = false)

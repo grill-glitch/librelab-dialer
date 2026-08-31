@@ -1,15 +1,17 @@
 package org.librelab.dialer.ui
 
 import android.Manifest
+import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
 import androidx.compose.animation.*
@@ -91,6 +93,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        private const val REQUEST_CODE_SET_DEFAULT_DIALER = 1
+    }
+
     @Inject
     lateinit var telecomAdapter: TelecomAdapter
 
@@ -106,8 +112,19 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { /* result handled by recomposition */ }
 
+    /** Launcher for the ROLE_DIALER system dialog (Android 10+). */
+    private lateinit var defaultDialerLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Register the role-request result handler before any Composable runs
+        defaultDialerLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { /* system dialog handles RESULT_OK / cancellation; refresh on resume */ }
+
+        // Capture launcher reference for use inside Compose lambdas
+        val launcher = defaultDialerLauncher
 
         // Request runtime permissions
         val missing = requiredPermissions.filter {
@@ -125,6 +142,7 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     telecomAdapter = telecomAdapter,
                     modifier = Modifier.fillMaxSize(),
+                    defaultDialerLauncher = defaultDialerLauncher,
                 )
             }
         }
@@ -134,8 +152,6 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         // Check and broadcast default-dialer status; the ViewModel will recompose
         // whenever the RoleManager state changes (onResume covers role-change scenarios).
-        val roleManager = getSystemService(Context.ROLE_SERVICE) as? android.app.role.RoleManager
-        val isDefault = roleManager?.isRoleHeld(android.app.role.RoleManager.ROLE_DIALER) == true
         if (::mainViewModel.isInitialized) {
             mainViewModel.refreshDefaultDialer()
         }
@@ -143,6 +159,14 @@ class MainActivity : ComponentActivity() {
         if (window.decorView.visibility != android.view.View.VISIBLE) {
             @Suppress("DEPRECATION")
             window.decorView.visibility = android.view.View.VISIBLE
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SET_DEFAULT_DIALER) {
+            // Refresh dialer state after returning from the system role dialog
+            mainViewModel.refreshDefaultDialer()
         }
     }
 
@@ -158,6 +182,7 @@ private fun MainScreen(
     telecomAdapter: TelecomAdapter,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel(),
+    defaultDialerLauncher: ActivityResultLauncher<Intent>? = null,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -275,7 +300,7 @@ private fun MainScreen(
                     buttonText = stringResource(R.string.action_go_settings),
                     onClick = {
                         val intent = viewModel.createRequestDefaultDialerIntent()
-                        ctx.startActivity(intent)
+                        defaultDialerLauncher?.launch(intent)
                     },
                     onDismiss = { viewModel.dismissDefaultDialerBanner() },
                     modifier = Modifier

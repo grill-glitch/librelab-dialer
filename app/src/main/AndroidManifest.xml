@@ -12,6 +12,9 @@
 
     <!-- Phone / Telecom -->
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <!-- Required for appearing in the system default-dialer picker -->
+    <uses-feature android:name="android.software.app_dialer" android:required="false" />
+    <uses-feature android:name="android.software.dialer" android:required="false" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
