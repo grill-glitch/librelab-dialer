@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import org.librelab.dialer.domain.model.CallLogEntry
 import org.librelab.dialer.domain.model.CallLogGroup
 import org.librelab.dialer.domain.model.CallType
+import org.librelab.dialer.ui.calllog.CallLogFilter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,16 +56,35 @@ class CallLogRepository @Inject constructor(
     /**
      * Query recent call log entries.
      * @param limit Max entries to return (0 = unlimited)
+     * @param filter Optional type filter (INCOMING, OUTGOING, MISSED). Null = ALL types.
      */
-    suspend fun getCallLog(limit: Int = 500): List<CallLogEntry> = withContext(Dispatchers.IO) {
+    suspend fun getCallLog(limit: Int = 500, filter: CallLogFilter? = null): List<CallLogEntry> = withContext(Dispatchers.IO) {
         val entries = mutableListOf<CallLogEntry>()
         val uri = CallLog.Calls.CONTENT_URI
-        val selection = "${CallLog.Calls.TYPE} != ?"
-        val selectionArgs = arrayOf(CallType.BLOCKED.ordinal.toString())
+
+        // Build selection based on filter type
+        val typeSelection: String?
+        val selectionArgs: Array<String>?
+
+        if (filter != null && filter != CallLogFilter.ALL) {
+            typeSelection = "${CallLog.Calls.TYPE} = ?"
+            selectionArgs = arrayOf(
+                when (filter) {
+                    CallLogFilter.INCOMING -> CallType.INCOMING.ordinal.toString()
+                    CallLogFilter.OUTGOING -> CallType.OUTGOING.ordinal.toString()
+                    CallLogFilter.MISSED -> CallType.MISSED.ordinal.toString()
+                    else -> return@withContext emptyList()
+                }
+            )
+        } else {
+            // Exclude BLOCKED entries but include all normal types
+            typeSelection = "${CallLog.Calls.TYPE} != ?"
+            selectionArgs = arrayOf(CallType.BLOCKED.ordinal.toString())
+        }
 
         // SDK 37 changed the query() signatures — limit must go into the query Bundle.
         val queryArgs = Bundle().apply {
-            putString(android.content.ContentResolver.QUERY_ARG_SQL_SELECTION, selection)
+            putString(android.content.ContentResolver.QUERY_ARG_SQL_SELECTION, typeSelection)
             putStringArray(android.content.ContentResolver.QUERY_ARG_SQL_SELECTION_ARGS, selectionArgs)
             putString(android.content.ContentResolver.QUERY_ARG_SQL_SORT_ORDER, CALL_LOG_SORT_ORDER)
             if (limit > 0) {

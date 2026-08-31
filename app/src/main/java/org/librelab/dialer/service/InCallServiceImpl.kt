@@ -133,6 +133,9 @@ class InCallServiceImpl : InCallService(), SensorEventListener {
 
         val thread = HandlerThread("InCallServiceThread").apply { start() }
         mainHandler = Handler(thread.looper)
+
+        // Register this service with CallManager so audio control (mute/speaker) works
+        callManager.registerInCallService(this)
     }
 
     override fun onBind(intent: Intent?): IBinder? {

@@ -211,6 +211,13 @@
             </intent-filter>
         </service>
 
+        <!-- Call Recording — bound by InCallServiceImpl when recording starts.
+             Audio recording requires foregroundServiceType=microphone (Android 14+). -->
+        <service
+            android:name=".service.CallRecorderService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
         <!-- ===================== BROADCAST RECEIVERS ===================== -->
 
         <!-- Missed call notification receiver -->

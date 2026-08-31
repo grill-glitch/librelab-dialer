@@ -49,8 +49,17 @@ class CallLogViewModel @Inject constructor(
 
     fun setFilter(filter: CallLogFilter) {
         _selectedFilter.value = filter
-        // Re-filter the existing call log (in production, would re-query)
-        // For now just update the UI state
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val filterParam = if (filter == CallLogFilter.ALL) null else filter
+                val entries = callLogRepository.getCallLog(limit = 500, filter = filterParam)
+                val groups = callLogRepository.groupCallLogEntries(entries)
+                _callLogGroups.value = groups
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     fun deleteEntry(entryId: Long) {

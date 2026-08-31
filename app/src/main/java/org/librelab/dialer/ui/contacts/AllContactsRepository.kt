@@ -7,6 +7,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.librelab.dialer.domain.model.Contact
+import org.librelab.dialer.domain.model.PhoneNumber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,8 +21,17 @@ class AllContactsRepository @Inject constructor(
 ) {
     private val contentResolver = context.contentResolver
 
+    /**
+     * Fetch all contacts who have at least one phone number.
+     * For each contact, also loads all associated phone numbers.
+     *
+     * Implementation: first query Contacts with HAS_PHONE_NUMBER != 0, then
+     * batch-query CommonDataKinds.Phone by contact ID to get actual numbers.
+     * This is the standard pattern used by Android contact loader implementations.
+     */
     suspend fun getAllContacts(limit: Int = 500): List<Contact> = withContext(Dispatchers.IO) {
-        val contacts = mutableListOf<Contact>()
+        // Step 1: Load contact rows (only those with phone numbers)
+        val contactRows = mutableListOf<Contact>()
         val cursor = contentResolver.query(
             ContactsContract.Contacts.CONTENT_URI,
             arrayOf(
@@ -49,7 +59,7 @@ class AllContactsRepository @Inject constructor(
 
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
-                contacts.add(
+                contactRows.add(
                     Contact(
                         id = id,
                         lookupKey = it.getString(lookupIdx) ?: "",
@@ -57,10 +67,66 @@ class AllContactsRepository @Inject constructor(
                         photoUri = it.getString(photoIdx)?.let { u -> Uri.parse(u) },
                         photoThumbnailUri = it.getString(photoThumbIdx)?.let { u -> Uri.parse(u) },
                         isFavorite = it.getInt(starredIdx) == 1,
-                    )
+                    ),
                 )
             }
         }
-        contacts
+
+        if (contactRows.isEmpty()) return@withContext emptyList()
+
+        // Step 2: Batch-load phone numbers for all contacts in one query
+        val contactIds = contactRows.map { it.id }.toLongArray()
+        val phoneNumbersMap = loadPhoneNumbersForContacts(contactIds)
+
+        // Step 3: Attach phone numbers to contacts
+        contactRows.map { contact ->
+            contact.copy(phoneNumbers = phoneNumbersMap[contact.id] ?: emptyList())
+        }
+    }
+
+    /**
+     * Load all phone numbers for a batch of contacts in a single query.
+     * Returns a map of contactId → list of PhoneNumber.
+     */
+    private fun loadPhoneNumbersForContacts(contactIds: LongArray): Map<Long, List<PhoneNumber>> {
+        if (contactIds.isEmpty()) return emptyMap()
+
+        val result = mutableMapOf<Long, MutableList<PhoneNumber>>()
+        val placeholders = contactIds.joinToString(",") { "?" }
+        val selection = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} IN ($placeholders)"
+
+        val phoneCursor = contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            arrayOf(
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.TYPE,
+                ContactsContract.CommonDataKinds.Phone.LABEL,
+                ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER,
+            ),
+            selection,
+            contactIds.map { it.toString() }.toTypedArray(),
+            null,
+        )
+
+        phoneCursor?.use {
+            val contactIdIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
+            val numIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val typeIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)
+            val labelIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL)
+            val normIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
+
+            while (it.moveToNext()) {
+                val contactId = it.getLong(contactIdIdx)
+                val phoneNumber = PhoneNumber(
+                    number = it.getString(numIdx) ?: "",
+                    type = it.getInt(typeIdx),
+                    label = it.getString(labelIdx),
+                    normalizedNumber = it.getString(normIdx),
+                )
+                result.getOrPut(contactId) { mutableListOf() }.add(phoneNumber)
+            }
+        }
+        return result
     }
 }

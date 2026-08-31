@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.telecom.Call
 import android.telecom.CallAudioState
+import android.telecom.InCallService
 import android.telecom.PhoneAccountHandle
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,19 @@ class CallManager @Inject constructor(
     // Contact name cache (number → name) for reverse lookup
     private val contactNameCache = mutableMapOf<String, String>()
 
-    // Internal Call objects — held by the InCallService stub.
+    // InCallService instance — set by InCallServiceImpl once Telecom binds to it.
+    // Using a setter instead of constructor injection to break the CallManager↔InCallServiceImpl cycle.
+    @Volatile
+    var incallService: InCallService? = null
+        private set
+
+    /**
+     * Registers the live InCallServiceImpl instance so CallManager can delegate
+     * audio control (mute, speaker) to it. Called from InCallServiceImpl.onCreate.
+     */
+    fun registerInCallService(service: InCallService) {
+        this.incallService = service
+    }
     private val telecomCalls = mutableMapOf<String, Call>()
 
     fun getTelecomCall(callId: String): Call? = telecomCalls[callId]
@@ -157,11 +170,12 @@ class CallManager @Inject constructor(
     }
 
     /**
-     * Toggle mute.
+     * Toggle mute state of the current active call.
+     * Delegates to InCallServiceImpl.setMuted() which passes the request to Telecom.
      */
     fun toggleMute() {
-        // Mute state is managed through InCallService.setMute()
-        // The InCallService stub will sync this.
+        val audioState = _audioState.value ?: return
+        incallService?.setMuted(!audioState.isMuted)
     }
 
     fun isMuted(): Boolean {
@@ -169,9 +183,10 @@ class CallManager @Inject constructor(
     }
 
     /**
-     * Set audio route.
+     * Set audio route (speaker, earpiece, bluetooth, etc.).
+     * Delegates to InCallServiceImpl.setAudioRoute() which passes to Telecom.
      */
     fun setAudioRoute(route: Int) {
-        // Set through InCallService.setAudioRoute()
+        incallService?.setAudioRoute(route)
     }
 }
