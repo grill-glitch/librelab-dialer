@@ -123,6 +123,9 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
+    // OkHttp (for MIUI Yellow Page anti-spam API)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
     // DataStore for preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
