@@ -7,7 +7,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    coreApp="true"
+    android:installLocation="auto"
     package="org.librelab.dialer">
 
     <!-- Phone / Telecom -->
@@ -63,14 +63,25 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
 
+    <!-- Allow contacts apps to be discovered for dialing -->
+    <queries>
+        <package android:name="org.fossify.contacts" />
+        <package android:name="org.fossify.contacts.debug" />
+        <intent>
+            <action android:name="android.accounts.AccountAuthenticator" />
+        </intent>
+    </queries>
+
     <application
         android:name=".LibreDialerApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.LibreDialer"
         android:enabled="true"
+        android:appCategory="productivity"
         tools:targetApi="36">
 
         <!-- ===================== MAIN DIALER ===================== -->
@@ -95,7 +106,12 @@
                 <action android:name="android.intent.action.DIAL" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme=" Dialpad" />
+                <data android:scheme="tel" />
+            </intent-filter>
+            <!-- Dial: action only (for default-dialer qualification) -->
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <!-- ACTION_CALL_BUTTON from Intent -->
             <intent-filter>
