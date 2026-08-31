@@ -274,9 +274,8 @@ private fun MainScreen(
                     body = stringResource(R.string.setup_default_body),
                     buttonText = stringResource(R.string.action_go_settings),
                     onClick = {
-                        // Navigate to the Settings page — the user can then tap
-                        // "默认拨号器" to request the system role.
-                        settingsNavController.navigate(SettingsRoute.Root.route)
+                        val intent = viewModel.createRequestDefaultDialerIntent()
+                        ctx.startActivity(intent)
                     },
                     onDismiss = { viewModel.dismissDefaultDialerBanner() },
                     modifier = Modifier

@@ -398,16 +398,7 @@ private fun RootSettings(
                 subtitle = if (state.isDefaultDialer) "已设为默认拨号应用" else "点击设为默认拨号应用",
                 icon = Icons.Outlined.VerifiedUser,
                 onClick = {
-                    val intent = viewModel.createRequestDefaultDialerIntent()
-                    if (intent != null) {
-                        runCatching { context.startActivity(intent) }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            R.string.default_app_unavailable,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                    context.startActivity(viewModel.createRequestDefaultDialerIntent())
                 },
             )
         }

@@ -121,25 +121,24 @@ class MainViewModel @Inject constructor(
     }
 
     /**
-     * Create an intent to request the ROLE_DIALER.
-     * Android 10+: uses RoleManager.createRequestRoleIntent.
-     * Below Android 10: falls back to TelecomManager.ACTION_CHANGE_DEFAULT_DIALER.
-     * Returns null if no activity can handle the intent.
+     * Open the system Default Apps settings where the user can select this app
+     * as the default phone/dialer app. Works on all Android versions and ROMs.
      */
-    fun createRequestDefaultDialerIntent(): android.content.Intent? {
+    fun createRequestDefaultDialerIntent(): android.content.Intent {
+        // First try the role-request intent (Android 10+), but skip the
+        // resolveActivity check — it fails on crDroid/MIUI even when the
+        // intent is structurally valid.
         val roleManager = context.getSystemService(Context.ROLE_SERVICE) as? RoleManager
         val roleIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             roleManager?.createRequestRoleIntent(RoleManager.ROLE_DIALER)
         } else {
             null
         }
-        if (roleIntent != null && roleIntent.resolveActivity(context.packageManager) != null) {
+        if (roleIntent != null) {
             return roleIntent
         }
-        // Legacy fallback
-        val legacy = android.content.Intent("android.telecom.action.CHANGE_DEFAULT_DIALER")
-            .putExtra("android.telecom.extra.CHANGE_DEFAULT_DIALER_PACKAGE_NAME", context.packageName)
-        return legacy.takeIf { it.resolveActivity(context.packageManager) != null }
+        // Fallback: open the system Default Apps settings page
+        return android.content.Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
     }
 
     /** Dismiss the default-dialer setup banner (user permanently closed it). */
