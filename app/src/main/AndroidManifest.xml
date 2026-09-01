@@ -54,10 +54,10 @@
     <!-- NFC -->
     <uses-permission android:name="android.permission.NFC" />
 
-    <!-- Voicemail -->
-    <uses-permission android:name="org.librelab.voicemail.permission.ADD_VOICEMAIL" />
-    <uses-permission android:name="org.librelab.voicemail.permission.READ_VOICEMAIL" />
-    <uses-permission android:name="org.librelab.voicemail.permission.WRITE_VOICEMAIL" />
+    <!-- Voicemail — handled via CallScreeningService + VoicemailContract.
+         Custom org.librelab.voicemail.permission.* removed (only needed for
+         android.telecom.VoicemailService which is system-only / not in SDK).
+         See VoicemailServiceImpl.kt stub for details. -->
 
     <!-- Foreground service types -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -201,7 +201,13 @@
             android:name=".service.PhoneAccountRegistrationService"
             android:exported="false" />
 
-        <!-- Voicemail source -->
+        <!-- Voicemail source — NOTE: android.telecom.VoicemailService is a system-only
+             API not available in the public SDK. The implementation (VoicemailServiceImpl.kt)
+             is kept as a source stub but is NOT registered in the manifest.
+             Voicemail handling is done via CallScreeningService + VoicemailContract instead.
+             See: https://developer.android.com/reference/android/telecom/VoicemailService
+             To re-enable: add a telecom-stub JAR containing VoicemailService to the build. -->
+        <!--
         <service
             android:name=".service.VoicemailServiceImpl"
             android:permission="android.permission.BIND_VOICEMAIL"
@@ -210,6 +216,7 @@
                 <action android:name="android.telecom.VoicemailService" />
             </intent-filter>
         </service>
+        -->
 
         <!-- Call Recording — bound by InCallServiceImpl when recording starts.
              Audio recording requires foregroundServiceType=microphone (Android 14+). -->
